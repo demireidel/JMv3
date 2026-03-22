@@ -1,0 +1,431 @@
+@import "tailwindcss";
+
+/* ── Design Tokens ──────────────────────────────────────── */
+@theme inline {
+  /* Colors */
+  --color-primary: oklch(0.48 0.19 300);
+  --color-accent: oklch(0.80 0.17 85);
+  --color-accent-light: #f0d078;
+  --color-celeste: oklch(0.72 0.11 240);
+  --color-surface: #0a0a0f;
+  --color-navy: #0c1a2e;
+  --color-cream: #f5f0e8;
+  --color-warm: #fdfbf7;
+  --color-success: #51cf66;
+  --color-danger: #ff6b6b;
+
+  /* Party colors */
+  --color-lla-violet: #743BBC;
+  --color-lla-deep: #280071;
+  --color-lla-indigo: #250E62;
+
+  /* Text hierarchy */
+  --color-t1: oklch(1 0 0 / 0.92);
+  --color-t2: oklch(1 0 0 / 0.56);
+  --color-t3: oklch(1 0 0 / 0.32);
+
+  /* Surfaces */
+  --color-surface-1: oklch(0.20 0.02 270 / 0.4);
+  --color-surface-2: oklch(0.20 0.02 270 / 0.6);
+  --color-surface-3: oklch(0.20 0.02 270 / 0.8);
+  --color-border: oklch(1 0 0 / 0.06);
+  --color-border-hover: oklch(1 0 0 / 0.12);
+
+  /* Fonts */
+  --font-playfair: var(--font-playfair-display);
+  --font-bebas: var(--font-bebas-neue);
+  --font-sans: var(--font-source-sans);
+
+  /* Fluid type scale */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --text-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);
+  --text-xl: clamp(1.375rem, 1.1rem + 1.2vw, 2rem);
+  --text-2xl: clamp(1.75rem, 1.3rem + 2vw, 3rem);
+  --text-3xl: clamp(2.25rem, 1.5rem + 3vw, 4.5rem);
+  --text-hero: clamp(3rem, 2rem + 5vw, 7rem);
+  --text-display: clamp(4.5rem, 4rem + 8vw, 10rem);
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* Border widths */
+  --border-thin: 1px;
+  --border-md: 2px;
+  --border-lg: 3px;
+
+  /* Tracking (letter-spacing) */
+  --tracking-tight: 0.02em;
+  --tracking-normal: 0.1em;
+  --tracking-wide: 0.15em;
+  --tracking-wider: 0.2em;
+  --tracking-widest: 0.3em;
+
+  /* Easing */
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+
+  /* Animation durations */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 600ms;
+  --duration-reveal: 800ms;
+  --duration-shimmer: 6s;
+
+  /* Layout */
+  --nav-height: 4rem;
+  --container-max: 1280px;
+  --container-narrow: 900px;
+  --container-pad: clamp(1.5rem, 4vw, 2rem);
+  --space-section: clamp(4rem, 8vw, 8rem);
+
+  /* Z-index scale */
+  --z-base: 1;
+  --z-overlay: 40;
+  --z-nav: 50;
+  --z-modal: 100;
+  --z-skip: 9999;
+
+  /* Shadows */
+  --shadow-card: 0 2px 8px oklch(0 0 0 / 0.2);
+  --shadow-card-hover: 0 20px 60px oklch(0 0 0 / 0.4);
+  --shadow-glow: 0 0 30px oklch(0.80 0.17 85 / 0.15);
+  --shadow-nav-scrolled: 0 4px 30px oklch(0 0 0 / 0.3);
+}
+
+/* ── Reset & Base ───────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--color-t1);
+  background-color: var(--color-surface);
+  font-size: var(--text-base);
+}
+
+/* ── Accessibility ──────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1.5rem;
+  background: var(--color-accent);
+  color: var(--color-surface);
+  font-weight: 600;
+  z-index: var(--z-skip);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  transition: top var(--duration-fast);
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ── Gradient Overlays ─────────────────────────────────── */
+.hero-overlay {
+  background: linear-gradient(to top, rgba(10,10,15,0.95) 0%, rgba(10,10,15,0.4) 40%, rgba(10,10,15,0.1) 70%, rgba(10,10,15,0.3) 100%);
+}
+
+.section-overlay {
+  background: linear-gradient(to top, rgba(10,10,15,0.9) 0%, rgba(10,10,15,0.3) 60%, transparent 100%);
+}
+
+.surface-fade {
+  background: linear-gradient(to top, var(--color-surface) 0%, transparent 60%);
+}
+
+.accent-line {
+  background: linear-gradient(90deg, var(--color-celeste), var(--color-accent), var(--color-celeste));
+}
+
+.scroll-fade {
+  background: linear-gradient(to bottom, var(--color-t3), transparent);
+}
+
+/* ── Scroll-Driven Animations ───────────────────────────── */
+.fade-reveal,
+.slide-in-left,
+.slide-in-right,
+.scale-reveal {
+  opacity: 1;
+  transform: none;
+}
+
+@supports (animation-timeline: view()) {
+  .fade-reveal {
+    animation: fade-reveal-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+  }
+
+  .slide-in-left {
+    animation: slide-left linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+
+  .slide-in-right {
+    animation: slide-right linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+
+  .scale-reveal {
+    animation: scale-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+}
+
+@keyframes fade-reveal-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-left {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slide-right {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ── Shimmer & Glow ─────────────────────────────────────── */
+@property --shimmer-pos {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: -100%;
+}
+
+.gold-shimmer {
+  background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-light) 50%, var(--color-accent) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gold-shift var(--duration-shimmer) ease-in-out infinite;
+}
+
+@keyframes gold-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ── Photo Strip ────────────────────────────────────────── */
+@keyframes strip-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ── Scroll Indicator ───────────────────────────────────── */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(10px); opacity: 1; }
+}
+
+/* ── Loading Spinner ────────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── View Transitions ───────────────────────────────────── */
+::view-transition-old(root) {
+  animation: var(--duration-fast) ease-out both vt-fade-out;
+}
+
+::view-transition-new(root) {
+  animation: var(--duration-normal) ease-in both vt-fade-in;
+}
+
+@keyframes vt-fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+}
+
+/* ── Scroll Progress Bar (pure CSS) ────────────────────── */
+@supports (animation-timeline: scroll()) {
+  body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 49;
+    background: linear-gradient(90deg, var(--color-celeste), var(--color-accent), var(--color-celeste));
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: progress-fill linear both;
+    animation-timeline: scroll();
+  }
+
+  @keyframes progress-fill {
+    to { transform: scaleX(1); }
+  }
+
+  /* Accent line draw-in on scroll */
+  .accent-line-animated {
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: draw-line linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+
+  @keyframes draw-line {
+    to { transform: scaleX(1); }
+  }
+
+  /* Stagger grid children on scroll reveal */
+  .stagger-grid > * {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fade-reveal-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+  .stagger-grid > :nth-child(2) { animation-delay: 80ms; }
+  .stagger-grid > :nth-child(3) { animation-delay: 160ms; }
+  .stagger-grid > :nth-child(4) { animation-delay: 240ms; }
+  .stagger-grid > :nth-child(5) { animation-delay: 320ms; }
+  .stagger-grid > :nth-child(6) { animation-delay: 400ms; }
+}
+
+/* ── Skeleton Shimmer ──────────────────────────────────── */
+@keyframes shimmer-slide {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-1) 25%,
+    var(--color-surface-2) 50%,
+    var(--color-surface-1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-slide 1.5s ease-in-out infinite;
+  border-radius: var(--radius-lg);
+}
+
+/* ── Ambient Glow ──────────────────────────────────────── */
+.ambient-glow-hero {
+  position: relative;
+}
+
+.ambient-glow-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 30% 80%, oklch(0.80 0.17 85 / 0.06) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 60%, oklch(0.48 0.19 300 / 0.04) 0%, transparent 50%);
+}
+
+/* ── Link Hover Underline ──────────────────────────────── */
+.link-underline-hover {
+  position: relative;
+}
+
+.link-underline-hover::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-normal) var(--ease-premium);
+}
+
+.link-underline-hover:hover::after {
+  transform: scaleX(1);
+}
+
+/* ── Reduced Motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
+  }
+
+  .fade-reveal,
+  .slide-in-left,
+  .slide-in-right,
+  .scale-reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .gold-shimmer {
+    animation: none;
+    -webkit-text-fill-color: var(--color-accent);
+  }
+
+  .skeleton-shimmer {
+    animation: none;
+  }
+
+  .accent-line-animated {
+    transform: scaleX(1);
+    animation: none;
+  }
+
+  .stagger-grid > * {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .ambient-glow-hero::before {
+    display: none;
+  }
+
+  body::after {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
